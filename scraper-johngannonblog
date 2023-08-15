@@ -1,0 +1,54 @@
+options = Options()
+options.add_argument("--headless=new") #this makes it so that the we can run a "headless" browser (no GUI)
+driver = webdriver.Chrome(options=options)
+
+url_uk = 'https://johngannonblog.com/venture-capital-jobs-in-london/'
+url_europe = 'https://johngannonblog.com/venture-capital-jobs-in-europe/'
+
+driver.get(url_europe)
+
+#Script to delete popups!
+#popups = driver.find_elements(By.CLASS_NAME, "rm-close")
+#if len(popups) > 0:
+#   driver.find_element(By.CLASS_NAME, "rm-close").click()
+
+
+#script to click on link:
+#driver.find_element(By.XPATH, '//a[text()="Venture Capital Jobs and Internships in London"]').click()
+
+
+ul_positions  = driver.find_element(By.CSS_SELECTOR, 'ul.job_listings')
+
+#we cannot iterate through ul positions, as it is one block of text. 
+#Therefore, we are going to create different lists containing the title, the link to the job description and the time it was posted.
+
+job_position_name = ul_positions.find_elements(By.TAG_NAME, 'h3')
+job_position_link = ul_positions.find_elements(By.TAG_NAME,   'a')
+job_position_date = ul_positions.find_elements(By.CSS_SELECTOR, 'time')
+
+entries = []
+
+if len(job_position_name) == len(job_position_link) == len(job_position_date): #the lists above should be the same length, but lets make sure there are no mistakes
+
+    i=0
+    while i < len(job_position_date):
+        
+        entries.append({'Position': job_position_name[i].text, 'Uploaded':job_position_date[i].get_attribute('datetime'), 'Descript': job_position_link[i].get_attribute('href')})
+        
+        i+=1
+        '''
+        #if you want the print statements do these
+        print(job_position_name[i].text)
+        
+        print(job_position_link[i].get_attribute('href'))
+        print('posted' +':', job_position_date[i].get_attribute('datetime'))
+        print('\n')
+        '''
+
+else:
+    #this is simply a way to stop the function from not matching the job descriptions to the right links
+    entires.append({'Position': 'List Error', 'Uploaded':'List Error', 'Descript': 'List Error'})
+
+entries_df = pd.DataFrame(entries)
+
+entries_df
