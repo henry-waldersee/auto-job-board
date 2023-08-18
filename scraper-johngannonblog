@@ -23,31 +23,16 @@ ul_positions  = driver.find_element(By.CSS_SELECTOR, 'ul.job_listings')
 #Therefore, we are going to create different lists containing the title, the link to the job description and the time it was posted.
 
 job_position_name = ul_positions.find_elements(By.TAG_NAME, 'h3')
-job_position_link = ul_positions.find_elements(By.TAG_NAME,   'a')
 job_position_date = ul_positions.find_elements(By.CSS_SELECTOR, 'time')
+job_position_link = ul_positions.find_elements(By.TAG_NAME,   'a')
 
 entries = []
 
-if len(job_position_name) == len(job_position_link) == len(job_position_date): #the lists above should be the same length, but lets make sure there are no mistakes
+for date name, date, link in zip(job_position_name, job_position_date, job_position_link):
 
-    i=0
-    while i < len(job_position_date):
-        
-        entries.append({'Position': job_position_name[i].text, 'Uploaded':job_position_date[i].get_attribute('datetime'), 'Descript': job_position_link[i].get_attribute('href')})
-        
-        i+=1
-        '''
-        #if you want the print statements do these
-        print(job_position_name[i].text)
-        
-        print(job_position_link[i].get_attribute('href'))
-        print('posted' +':', job_position_date[i].get_attribute('datetime'))
-        print('\n')
-        '''
-
-else:
-    #this is simply a way to stop the function from not matching the job descriptions to the right links
-    entires.append({'Position': 'List Error', 'Uploaded':'List Error', 'Descript': 'List Error'})
+    entries.append({'Position': name.text,
+                    'Uploaded': date.get_attribute('datetime'), 
+                    'Descript': link.get_attribute('href')})
 
 entries_df = pd.DataFrame(entries)
 
