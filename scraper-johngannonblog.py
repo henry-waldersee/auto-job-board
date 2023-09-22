@@ -17,13 +17,13 @@ driver.get(url_europe)
 #driver.find_element(By.XPATH, '//a[text()="Venture Capital Jobs and Internships in London"]').click()
 
 
-ul_positions  = driver.find_element(By.CSS_SELECTOR, 'ul.job_listings')
+ul_positions  = driver.find_element(By.CSS_SELECTOR, 'ul.job_listings') #CSS Selecor is the only one that works
 
-#we cannot iterate through ul positions, as it is one block of text. 
+#we cannot iterate through ul positions, as it is one block of text.
 #Therefore, we are going to create different lists containing the title, the link to the job description and the time it was posted.
 
 job_position_name = ul_positions.find_elements(By.TAG_NAME, 'h3')
-job_position_date = ul_positions.find_elements(By.CSS_SELECTOR, 'time')
+job_position_date = ul_positions.find_elements(By.CSS_SELECTOR, 'time') #needs to use CSS selector
 job_position_link = ul_positions.find_elements(By.TAG_NAME,   'a')
 
 entries = []
